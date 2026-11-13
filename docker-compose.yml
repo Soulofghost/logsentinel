@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  logsentinel:
+    build: .
+    container_name: logsentinel-siem
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - LOGSENTINEL_DB=/app/data/logsentinel.db
+    volumes:
+      - siem_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  siem_data:

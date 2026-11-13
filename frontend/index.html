@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogSentinel — Security Operations Center (SOC) & SIEM Analysis</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="soc-shell">
+    <!-- Top Bar -->
+    <header class="soc-header">
+      <div class="brand">
+        <div class="radar-symbol">
+          <div class="radar-sweep"></div>
+        </div>
+        <div class="brand-text">
+          <h1>LOGSENTINEL <span class="badge-accent">SIEM v1.0</span></h1>
+          <p class="brand-sub">DEFENSIVE INTELLIGENCE &amp; MITRE ATT&amp;CK CORRELATION ENGINE</p>
+        </div>
+      </div>
+
+      <div class="soc-controls">
+        <div class="telemetry-status">
+          <span class="live-dot pulse"></span>
+          <span class="status-label">ENGINE ARMED // INGESTION ACTIVE</span>
+        </div>
+        <button id="refreshBtn" class="btn btn-secondary">Refresh Telemetry</button>
+      </div>
+    </header>
+
+    <!-- Metrics Strip -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">TOTAL LOGS INGESTED</span>
+        <span class="metric-val" id="metricTotalLogs">0</span>
+        <span class="metric-foot">Streaming Syslog / Nginx</span>
+      </div>
+      <div class="metric-card card-alert">
+        <span class="metric-title">OPEN INCIDENTS</span>
+        <span class="metric-val text-alert" id="metricOpenAlerts">0</span>
+        <span class="metric-foot">Awaiting Triage</span>
+      </div>
+      <div class="metric-card card-crit">
+        <span class="metric-title">CRITICAL SEVERITY</span>
+        <span class="metric-val text-crit" id="metricCritical">0</span>
+        <span class="metric-foot">Immediate Isolation Req</span>
+      </div>
+      <div class="metric-card card-high">
+        <span class="metric-title">HIGH SEVERITY</span>
+        <span class="metric-val text-high" id="metricHigh">0</span>
+        <span class="metric-foot">Elevated Risk Vector</span>
+      </div>
+      <div class="metric-card card-resolved">
+        <span class="metric-title">RESOLVED INCIDENTS</span>
+        <span class="metric-val text-resolved" id="metricResolved">0</span>
+        <span class="metric-foot">Remediated &amp; Closed</span>
+      </div>
+    </section>
+
+    <!-- Simulation Bar -->
+    <section class="sim-strip">
+      <div class="sim-label">THREAT INGESTION SIMULATOR:</div>
+      <div class="sim-actions">
+        <button class="btn btn-sim" onclick="simulateAttack('sqli')">Inject SQLi Exploit</button>
+        <button class="btn btn-sim" onclick="simulateAttack('traversal')">Inject Path Traversal</button>
+        <button class="btn btn-sim" onclick="simulateAttack('sudo')">Inject Sudo Abuse</button>
+        <button class="btn btn-sim" onclick="simulateAttack('scanner')">Inject Scanner Probe</button>
+        <button class="btn btn-sim btn-sim-benign" onclick="simulateAttack('benign')">Inject Normal Traffic</button>
+      </div>
+    </section>
+
+    <!-- Main SOC Workspace -->
+    <main class="soc-main">
+      <!-- Left Column: Incidents Triage -->
+      <section class="panel panel-incidents">
+        <div class="panel-header">
+          <h2>Active Security Incidents</h2>
+          <div class="filter-group">
+            <button class="filter-chip active" data-filter="ALL">ALL</button>
+            <button class="filter-chip" data-filter="CRITICAL">CRITICAL</button>
+            <button class="filter-chip" data-filter="HIGH">HIGH</button>
+            <button class="filter-chip" data-filter="OPEN">OPEN ONLY</button>
+          </div>
+        </div>
+
+        <div id="incidentsList" class="incidents-container">
+          <div class="empty-state">No incidents detected. System telemetry normal.</div>
+        </div>
+      </section>
+
+      <!-- Right Column: Live Ingestion Stream & Manual Ingest -->
+      <section class="panel panel-stream">
+        <div class="panel-header">
+          <h2>Ingested Event Stream</h2>
+          <span class="stream-pill">Tail -n 50</span>
+        </div>
+
+        <div id="logStream" class="log-stream-terminal">
+          <!-- Live log lines appear here -->
+        </div>
+
+        <div class="manual-ingest-bar">
+          <input type="text" id="manualLogInput" placeholder="Inject raw syslog or web log entry..." />
+          <button id="sendManualLogBtn" class="btn btn-primary">Inject Event</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
